@@ -4,6 +4,7 @@ import { blogPostRoutes } from '../modules/blogPost/blogPost.routes';
 import { bookingRoutes } from '../modules/booking/booking.routes';
 import { faqRoutes } from '../modules/faq/faq.routes';
 import { featuredInRoutes } from '../modules/featuedIn/featuedIn.routes';
+import { feedbackRoutes } from '../modules/feedback/feedback.routes';
 import { notificationRoutes } from '../modules/notification/notification.routes';
 import { reviewAndRatingRoutes } from '../modules/reviewAndRating/reviewAndRating.routes';
 import { serviceRoutes } from '../modules/service/service.routes';
@@ -86,10 +87,7 @@ const moduleRoutes = [
     path: '/notification',
     route: notificationRoutes,
   },
-  {
-    path: '/website-content',
-    route: websiteContentRoutes,
-  },
+  { path: '/website-content', route: websiteContentRoutes },
   {
     path: '/showcase',
     route: showcaseWorkRoutes,
@@ -101,6 +99,10 @@ const moduleRoutes = [
   {
     path: '/team-member',
     route: teamMemberRoutes,
+  },
+  {
+    path: '/feedback',
+    route: feedbackRoutes,
   },
 ];
 

@@ -133,7 +133,9 @@ const getAllRemainingServices = async (
     const bookings = await prisma.booking.findMany({
       where: {
         date: date,
-        status: BookingStatus.pending || BookingStatus.confirmed,
+        status: {
+          in: [BookingStatus.pending, BookingStatus.confirmed],
+        },
       },
     });
 

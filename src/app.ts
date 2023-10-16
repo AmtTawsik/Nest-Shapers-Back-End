@@ -19,7 +19,7 @@ app.use('/api/v1', routes);
 
 // Main route
 app.get('/', async (req: Request, res: Response) => {
-  res.send('Working Successfully');
+  res.send('This API is Working Successfully');
 });
 
 // Error Route
@@ -28,7 +28,7 @@ app.get('*', (req: Request, res: Response, next: NextFunction) => {
   const errorObjs = [
     {
       path: `${req.originalUrl}`,
-      message: `Invalid URL! API not found`,
+      message: `Invalid URL! API not found!!!`,
     },
   ];
   next(new ApiError(message, httpStatus.NOT_FOUND, errorObjs));
