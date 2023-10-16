@@ -7,3 +7,13 @@ export const userRole: UserRole[] = [
   'super_admin',
   'team_member',
 ];
+
+export const userFilterableFields: string[] = [
+  'searchTerm',
+  'name',
+  'email',
+  'role',
+  'gender',
+];
+
+export const userSearchableFields = ['address', 'name', 'role'];

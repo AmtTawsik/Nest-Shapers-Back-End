@@ -50,6 +50,7 @@ model TeamMember {
   serviceTeamId String
   serviceTeam   ServiceTeam @relation(fields: [serviceTeamId], references: [id])
 
+  @@unique([serviceTeamId])
   @@map("team_member")
 }
 
@@ -178,6 +179,7 @@ model Booking {
   service   AvailableService @relation(fields: [serviceId], references: [id])
   payment   Payment?
 
+  @@unique([userId, date, serviceId])
   @@map("booking")
 }
 
