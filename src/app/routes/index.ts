@@ -1,4 +1,5 @@
 import express from 'express';
+import { blogPostRoutes } from '../modules/blogPost/blogPost.routes';
 import { reviewAndRatingRoutes } from '../modules/reviewAndRating/reviewAndRating.routes';
 import { serviceRoutes } from '../modules/service/service.routes';
 import { serviceTeamRoutes } from '../modules/serviceTeam/serviceTeam.routes';
@@ -45,6 +46,10 @@ const moduleRoutes = [
   {
     path: '/review-and-rating',
     route: reviewAndRatingRoutes,
+  },
+  {
+    path: '/blog',
+    route: blogPostRoutes,
   },
 ];
 
