@@ -27,6 +27,10 @@ const moduleRoutes = [
     path: '/service-team',
     route: serviceTeamRoutes,
   },
+  {
+    path: '/service-category',
+    route: serviceTeamRoutes,
+  },
 ];
 
 // Application Routes
