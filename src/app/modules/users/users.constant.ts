@@ -10,10 +10,10 @@ export const userRole: UserRole[] = [
 
 export const userFilterableFields: string[] = [
   'searchTerm',
-  'name',
+  'fullName',
   'email',
   'role',
   'gender',
 ];
 
-export const userSearchableFields = ['address', 'name', 'role'];
+export const userSearchableFields = ['address', 'fullName'];

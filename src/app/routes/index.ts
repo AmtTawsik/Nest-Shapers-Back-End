@@ -1,4 +1,5 @@
 import express from 'express';
+import { specializationRoutes } from '../modules/specialization/specialization.routes';
 import { authRoutes } from '../modules/users/auth.routes';
 import { profileRoutes } from '../modules/users/profile.routes';
 import { userRoutes } from '../modules/users/users.routes';
@@ -16,6 +17,10 @@ const moduleRoutes = [
   {
     path: '/profile',
     route: profileRoutes,
+  },
+  {
+    path: '/specialization',
+    route: specializationRoutes,
   },
 ];
 

@@ -311,6 +311,15 @@ const updateProfileDataById = async (
     throw new ApiError('User does not exist', httpStatus.NOT_FOUND);
   }
 
+  if (
+    payload.role === 'admin' ||
+    payload.role === 'super_admin' ||
+    payload.role === 'customer' ||
+    payload.role === 'team_member'
+  ) {
+    throw new ApiError('You can not change role', httpStatus.NOT_FOUND);
+  }
+
   const result = await prisma.users.update({
     where: {
       id: verifiedUser.userId,
