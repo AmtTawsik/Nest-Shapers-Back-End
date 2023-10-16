@@ -157,6 +157,29 @@ const getProfileData: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+const updateProfileDataById: RequestHandler = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
+
+  const verifiedUser = jwtHelpers.verifyToken(
+    token as string,
+    config.jwt.secret as string
+  );
+  const payload = req.body;
+
+  const result = await UsersServices.updateProfileDataById(
+    verifiedUser,
+    payload
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Profile updated successfully',
+    data: result,
+  });
+});
+
 export const UserController = {
   insertIntoDB,
   signinUser,
@@ -166,4 +189,5 @@ export const UserController = {
   deleteDataById,
   getProfileData,
   refreshToken,
+  updateProfileDataById,
 };

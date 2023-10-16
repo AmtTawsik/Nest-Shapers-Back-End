@@ -299,6 +299,49 @@ const getProfileData = async (
   return user;
 };
 
+const updateProfileDataById = async (
+  verifiedUser: JwtPayload,
+  payload: Partial<Users>
+): Promise<IUserData> => {
+  const existingUser = await prisma.users.findUnique({
+    where: { id: verifiedUser.userId },
+  });
+
+  if (!existingUser) {
+    throw new ApiError('User does not exist', httpStatus.NOT_FOUND);
+  }
+
+  const result = await prisma.users.update({
+    where: {
+      id: verifiedUser.userId,
+    },
+    data: {
+      ...payload,
+      password: payload.password
+        ? await bcrypt.hash(payload.password, Number(config.bcrypt_salt_rounds))
+        : undefined,
+    },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      role: true,
+      contactNumber: true,
+      address: true,
+      profileImageUrl: true,
+      gender: true,
+      teamMembers: true,
+      bookings: true,
+      reviewAndRatings: true,
+      notifications: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  return result;
+};
+
 export const UsersServices = {
   insertIntoDB,
   loginUser,
@@ -308,4 +351,5 @@ export const UsersServices = {
   deleteDataById,
   getProfileData,
   refreshToken,
+  updateProfileDataById,
 };

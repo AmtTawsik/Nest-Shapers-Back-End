@@ -41,7 +41,29 @@ const update = z.object({
   }),
 });
 
+export const userLogin = z.object({
+  body: z.object({
+    email: z
+      .string()
+      .email({ message: 'Invalid email format' })
+      .min(1, { message: 'Email is required' }),
+    password: z.string({
+      required_error: 'Password is required',
+    }),
+  }),
+});
+
+const refreshTokenZodSchema = z.object({
+  cookies: z.object({
+    refreshToken: z.string({
+      required_error: 'Refresh Token is required',
+    }),
+  }),
+});
+
 export const validationSchema = {
   create,
   update,
+  userLogin,
+  refreshTokenZodSchema,
 };
