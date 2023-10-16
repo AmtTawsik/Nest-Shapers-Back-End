@@ -11,6 +11,7 @@ import { showcaseWorkRoutes } from '../modules/showcaseWork/showcaseWork.routes'
 import { slotsRoutes } from '../modules/slot/slot.routes';
 import { specializationRoutes } from '../modules/specialization/specialization.routes';
 import { statsRoutes } from '../modules/stats/stats.routes';
+import { teamMemberRoutes } from '../modules/teamMember/teamMember.routes';
 import { upcomingServiceRoutes } from '../modules/upcomingService/upcomingService.routes';
 import { authRoutes } from '../modules/users/auth.routes';
 import { profileRoutes } from '../modules/users/profile.routes';
@@ -86,6 +87,10 @@ const moduleRoutes = [
   {
     path: '/slots',
     route: slotsRoutes,
+  },
+  {
+    path: '/team-member',
+    route: teamMemberRoutes,
   },
 ];
 
