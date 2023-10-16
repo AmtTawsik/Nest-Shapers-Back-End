@@ -28,3 +28,7 @@ export type ISigninUserResponse = {
   accessToken: string;
   refreshToken: string;
 };
+
+export type IRefreshTokenResponse = {
+  accessToken: string;
+};

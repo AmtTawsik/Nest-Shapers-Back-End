@@ -14,6 +14,7 @@ import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
 import { userSearchableFields } from './users.constant';
 import {
+  IRefreshTokenResponse,
   ISigninUser,
   ISigninUserResponse,
   IUserData,
@@ -100,6 +101,40 @@ const loginUser = async (data: ISigninUser): Promise<ISigninUserResponse> => {
   return {
     accessToken,
     refreshToken,
+  };
+};
+
+const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
+  //verify token
+  // invalid token - synchronous
+  let verifiedToken = null;
+  try {
+    verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.refresh_secret as Secret
+    );
+  } catch (err) {
+    throw new ApiError('Invalid Refresh Token', httpStatus.FORBIDDEN);
+  }
+
+  const { userId } = verifiedToken;
+
+  const user = await prisma.users.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    throw new ApiError('User does not exist', httpStatus.NOT_FOUND);
+  }
+  const { id, role, email: userEmail } = user;
+  const accessToken = jwtHelpers.createToken(
+    { userId: id, role, userEmail },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string
+  );
+
+  return {
+    accessToken: accessToken,
   };
 };
 
@@ -272,4 +307,5 @@ export const UsersServices = {
   updateDataById,
   deleteDataById,
   getProfileData,
+  refreshToken,
 };
