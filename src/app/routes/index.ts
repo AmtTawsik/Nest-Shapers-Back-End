@@ -2,6 +2,7 @@ import express from 'express';
 import { blogPostRoutes } from '../modules/blogPost/blogPost.routes';
 import { faqRoutes } from '../modules/faq/faq.routes';
 import { featuredInRoutes } from '../modules/featuedIn/featuedIn.routes';
+import { notificationRoutes } from '../modules/notification/notification.routes';
 import { reviewAndRatingRoutes } from '../modules/reviewAndRating/reviewAndRating.routes';
 import { serviceRoutes } from '../modules/service/service.routes';
 import { serviceTeamRoutes } from '../modules/serviceTeam/serviceTeam.routes';
@@ -65,6 +66,10 @@ const moduleRoutes = [
   {
     path: '/featured',
     route: featuredInRoutes,
+  },
+  {
+    path: '/notification',
+    route: notificationRoutes,
   },
 ];
 
