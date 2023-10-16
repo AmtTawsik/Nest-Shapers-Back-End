@@ -1,0 +1,63 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.tslint": true,
+    "source.organizeImports": true
+  },
+  "javascript.validate.enable": false,
+  "typescript.validate.enable": true,
+
+  "editor.tokenColorCustomizations": {
+    "[Default Dark+]": {
+      "functions": "#1ED760",
+      "keywords": "#096bff",
+      //"keywords": "#096bff",
+      "strings": "#FFD866",
+      "comments": "#5f5f5f",
+      "numbers": "#c74ded",
+      "variables": "#93E6FC",
+
+      "textMateRules": [
+        {
+          "scope": "variable.other.constant",
+          "settings": {
+            "foreground": "#c74ded"
+          }
+        },
+        {
+          "scope": [
+            "keyword.operator",
+            "keyword.control",
+            "keyword.operator.new"
+          ],
+          "settings": {
+            "foreground": "#f92672"
+          }
+        },
+
+        {
+          "scope": "entity.name.tag",
+          "settings": {
+            "foreground": "#3ca3e4"
+          }
+        },
+        {
+          "scope": "variable.parameter",
+          "settings": {
+            "foreground": "#FC9867"
+          }
+        },
+        {
+          "scope": "entity.other.attribute-name",
+          "settings": {
+            "foreground": "#96E072"
+          }
+        }
+      ]
+    }
+  },
+  "C_Cpp.errorSquiggles": "enabled"
+  // "peacock.color": "#61dafb"
+}
