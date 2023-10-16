@@ -252,6 +252,7 @@ model Stats {
   bestSellingService   AvailableService @relation(fields: [bestSellingServiceId], references: [id])
   totalClient          Int
   totalServiceProvided Int              @default(1000)
+  totalServices        Int?             @default(25)
 
   @@map("stats")
 }

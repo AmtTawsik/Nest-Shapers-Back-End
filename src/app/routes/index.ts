@@ -5,6 +5,7 @@ import { reviewAndRatingRoutes } from '../modules/reviewAndRating/reviewAndRatin
 import { serviceRoutes } from '../modules/service/service.routes';
 import { serviceTeamRoutes } from '../modules/serviceTeam/serviceTeam.routes';
 import { specializationRoutes } from '../modules/specialization/specialization.routes';
+import { statsRoutes } from '../modules/stats/stats.routes';
 import { upcomingServiceRoutes } from '../modules/upcomingService/upcomingService.routes';
 import { authRoutes } from '../modules/users/auth.routes';
 import { profileRoutes } from '../modules/users/profile.routes';
@@ -55,6 +56,10 @@ const moduleRoutes = [
   {
     path: '/faq',
     route: faqRoutes,
+  },
+  {
+    path: '/stats',
+    route: statsRoutes,
   },
 ];
 
