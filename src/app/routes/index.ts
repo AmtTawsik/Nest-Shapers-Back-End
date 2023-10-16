@@ -6,6 +6,7 @@ import { notificationRoutes } from '../modules/notification/notification.routes'
 import { reviewAndRatingRoutes } from '../modules/reviewAndRating/reviewAndRating.routes';
 import { serviceRoutes } from '../modules/service/service.routes';
 import { serviceTeamRoutes } from '../modules/serviceTeam/serviceTeam.routes';
+import { showcaseWorkRoutes } from '../modules/showcaseWork/showcaseWork.routes';
 import { specializationRoutes } from '../modules/specialization/specialization.routes';
 import { statsRoutes } from '../modules/stats/stats.routes';
 import { upcomingServiceRoutes } from '../modules/upcomingService/upcomingService.routes';
@@ -75,6 +76,10 @@ const moduleRoutes = [
   {
     path: '/website-content',
     route: websiteContentRoutes,
+  },
+  {
+    path: '/showcase',
+    route: showcaseWorkRoutes,
   },
 ];
 
