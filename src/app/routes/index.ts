@@ -1,7 +1,9 @@
 import express from 'express';
+import { reviewAndRatingRoutes } from '../modules/reviewAndRating/reviewAndRating.routes';
 import { serviceRoutes } from '../modules/service/service.routes';
 import { serviceTeamRoutes } from '../modules/serviceTeam/serviceTeam.routes';
 import { specializationRoutes } from '../modules/specialization/specialization.routes';
+import { upcomingServiceRoutes } from '../modules/upcomingService/upcomingService.routes';
 import { authRoutes } from '../modules/users/auth.routes';
 import { profileRoutes } from '../modules/users/profile.routes';
 import { userRoutes } from '../modules/users/users.routes';
@@ -35,6 +37,14 @@ const moduleRoutes = [
   {
     path: '/service',
     route: serviceRoutes,
+  },
+  {
+    path: '/upcoming-service',
+    route: upcomingServiceRoutes,
+  },
+  {
+    path: '/review-and-rating',
+    route: reviewAndRatingRoutes,
   },
 ];
 
