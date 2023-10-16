@@ -30,6 +30,10 @@ router.post(
   ServiceController.insertIntoDB
 );
 
-router.get('/', ServiceController.getAllFromDB);
+router.get(
+  '/',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+  ServiceController.getAllFromDB
+);
 
 export const serviceRoutes = router;
