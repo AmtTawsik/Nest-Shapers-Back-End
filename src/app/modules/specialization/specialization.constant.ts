@@ -1,3 +1,3 @@
-export const specializationSearchableFields = ['name'];
+export const specializationSearchableFields = ['title'];
 
-export const specializationFilterableFields = ['searchTerm', 'name'];
+export const specializationFilterableFields = ['searchTerm', 'title'];
