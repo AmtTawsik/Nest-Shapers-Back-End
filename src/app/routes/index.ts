@@ -5,6 +5,7 @@ import { featuredInRoutes } from '../modules/featuedIn/featuedIn.routes';
 import { notificationRoutes } from '../modules/notification/notification.routes';
 import { reviewAndRatingRoutes } from '../modules/reviewAndRating/reviewAndRating.routes';
 import { serviceRoutes } from '../modules/service/service.routes';
+import { serviceCategoryRoutes } from '../modules/serviceCategory/serviceCategory.routes';
 import { serviceTeamRoutes } from '../modules/serviceTeam/serviceTeam.routes';
 import { showcaseWorkRoutes } from '../modules/showcaseWork/showcaseWork.routes';
 import { slotsRoutes } from '../modules/slot/slot.routes';
@@ -40,7 +41,7 @@ const moduleRoutes = [
   },
   {
     path: '/service-category',
-    route: serviceTeamRoutes,
+    route: serviceCategoryRoutes,
   },
   {
     path: '/service',

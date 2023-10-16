@@ -180,6 +180,18 @@ const updateProfileDataById: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+const getTeamMember: RequestHandler = catchAsync(async (req, res) => {
+  const result = await UsersServices.getTeamMember();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Team member retrived successfully',
+    data: result,
+  });
+});
+
 export const UserController = {
   insertIntoDB,
   signinUser,
@@ -190,4 +202,5 @@ export const UserController = {
   getProfileData,
   refreshToken,
   updateProfileDataById,
+  getTeamMember,
 };

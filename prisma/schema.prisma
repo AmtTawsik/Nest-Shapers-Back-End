@@ -99,7 +99,7 @@ model Service {
 
   serviceName String @unique
   description String
-  price       String
+  price       Float
   imageUrl    String
 
   serviceCategoryId String
@@ -119,6 +119,9 @@ model AvailableService {
   isAvailable Boolean @default(true)
 
   totalServiceProvided Int @default(100)
+
+  categoryId String?
+  price      Float?
 
   serviceId        String
   service          Service           @relation(fields: [serviceId], references: [id])

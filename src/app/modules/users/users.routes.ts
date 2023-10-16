@@ -6,6 +6,12 @@ import { UserController } from './users.controller';
 const router = express.Router();
 
 router.get(
+  '/team-member',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+  UserController.getTeamMember
+);
+
+router.get(
   '/:id',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   UserController.getDataById
@@ -24,6 +30,12 @@ router.get(
   '/',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   UserController.getAllFromDB
+);
+
+router.get(
+  '/team-member',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+  UserController.getTeamMember
 );
 
 export const userRoutes = router;

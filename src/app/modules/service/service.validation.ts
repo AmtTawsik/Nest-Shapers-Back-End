@@ -8,7 +8,7 @@ const create = z.object({
     description: z.string({
       required_error: 'Description is required',
     }),
-    price: z.string({
+    price: z.number({
       required_error: 'Price is required',
     }),
     imageUrl: z.string({

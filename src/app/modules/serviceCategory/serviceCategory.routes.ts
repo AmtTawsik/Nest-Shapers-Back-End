@@ -39,4 +39,4 @@ router.get(
   ServiceCategoryController.getAllFromDB
 );
 
-export const serviceTeamRoutes = router;
+export const serviceCategoryRoutes = router;

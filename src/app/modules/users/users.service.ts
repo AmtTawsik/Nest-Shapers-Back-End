@@ -351,6 +351,14 @@ const updateProfileDataById = async (
   return result;
 };
 
+const getTeamMember = async (): Promise<Users[] | null> => {
+  const user = await prisma.users.findMany({
+    where: { role: 'team_member' },
+  });
+
+  return user;
+};
+
 export const UsersServices = {
   insertIntoDB,
   loginUser,
@@ -361,4 +369,5 @@ export const UsersServices = {
   getProfileData,
   refreshToken,
   updateProfileDataById,
+  getTeamMember,
 };
