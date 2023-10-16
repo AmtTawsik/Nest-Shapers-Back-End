@@ -1,4 +1,5 @@
 import express from 'express';
+import { serviceRoutes } from '../modules/service/service.routes';
 import { serviceTeamRoutes } from '../modules/serviceTeam/serviceTeam.routes';
 import { specializationRoutes } from '../modules/specialization/specialization.routes';
 import { authRoutes } from '../modules/users/auth.routes';
@@ -30,6 +31,10 @@ const moduleRoutes = [
   {
     path: '/service-category',
     route: serviceTeamRoutes,
+  },
+  {
+    path: '/service',
+    route: serviceRoutes,
   },
 ];
 
