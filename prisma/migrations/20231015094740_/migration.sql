@@ -1,9 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `Users` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- CreateEnum
 CREATE TYPE "Gender" AS ENUM ('male', 'female', 'others');
 
@@ -17,16 +11,13 @@ CREATE TYPE "WeekDays" AS ENUM ('saturday', 'sunday', 'monday', 'tuesday', 'wedn
 CREATE TYPE "BookingStatus" AS ENUM ('pending', 'confirmed', 'rejected');
 
 -- CreateEnum
-CREATE TYPE "PaymentStatus" AS ENUM ('paid', 'notPaid');
+CREATE TYPE "PaymentStatus" AS ENUM ('paid', 'notPaid', 'rejected');
 
 -- CreateEnum
 CREATE TYPE "PaymentMethod" AS ENUM ('cashOnDelivery', 'online');
 
 -- CreateEnum
 CREATE TYPE "NotificationStatus" AS ENUM ('booking', 'confirmation', 'reminder');
-
--- DropTable
-DROP TABLE "Users";
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -101,7 +92,7 @@ CREATE TABLE "service" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "serviceName" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "price" TEXT NOT NULL,
+    "price" DOUBLE PRECISION NOT NULL,
     "imageUrl" TEXT NOT NULL,
     "serviceCategoryId" TEXT NOT NULL,
 
@@ -116,6 +107,9 @@ CREATE TABLE "available_sevice" (
     "isFeatured" BOOLEAN NOT NULL DEFAULT false,
     "isAvailable" BOOLEAN NOT NULL DEFAULT true,
     "totalServiceProvided" INTEGER NOT NULL DEFAULT 100,
+    "categoryId" TEXT,
+    "price" DOUBLE PRECISION,
+    "serviceName" TEXT,
     "serviceId" TEXT NOT NULL,
 
     CONSTRAINT "available_sevice_pkey" PRIMARY KEY ("id")
@@ -138,7 +132,6 @@ CREATE TABLE "slot" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "startTime" TEXT NOT NULL,
-    "weekDay" "WeekDays" NOT NULL,
     "serviceTeamId" TEXT NOT NULL,
     "availableServiceId" TEXT NOT NULL,
 
@@ -155,6 +148,7 @@ CREATE TABLE "booking" (
     "time" TEXT,
     "status" "BookingStatus" NOT NULL DEFAULT 'pending',
     "userId" TEXT NOT NULL,
+    "slotId" TEXT NOT NULL,
     "serviceId" TEXT NOT NULL,
 
     CONSTRAINT "booking_pkey" PRIMARY KEY ("id")
@@ -185,6 +179,17 @@ CREATE TABLE "review_and_rating" (
     "review" TEXT NOT NULL,
 
     CONSTRAINT "review_and_rating_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "feedback" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "comment" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "feedback_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -220,6 +225,7 @@ CREATE TABLE "stats" (
     "bestSellingServiceId" TEXT NOT NULL,
     "totalClient" INTEGER NOT NULL,
     "totalServiceProvided" INTEGER NOT NULL DEFAULT 1000,
+    "totalServices" INTEGER DEFAULT 25,
 
     CONSTRAINT "stats_pkey" PRIMARY KEY ("id")
 );
@@ -250,12 +256,23 @@ CREATE TABLE "notification" (
 );
 
 -- CreateTable
+CREATE TABLE "team_notification" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "teamId" TEXT NOT NULL,
+    "readStatus" BOOLEAN NOT NULL DEFAULT false,
+    "message" TEXT NOT NULL,
+    "type" "NotificationStatus" NOT NULL,
+
+    CONSTRAINT "team_notification_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "website_content" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "heading" TEXT,
-    "subHeading" TEXT,
     "aboutUsText" TEXT,
     "aboutUsImage" TEXT,
     "ceoStatement" TEXT,
@@ -264,8 +281,37 @@ CREATE TABLE "website_content" (
     "companyAddress" TEXT,
     "companyContactNo" TEXT,
     "companyEmail" TEXT,
+    "footerText" TEXT,
 
     CONSTRAINT "website_content_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "website_header_content" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "headingOne" TEXT,
+    "subHeadingOne" TEXT,
+    "imageUrlOne" TEXT,
+    "headingTwo" TEXT,
+    "subHeadingTwo" TEXT,
+    "imageUrlTwo" TEXT,
+    "headingThree" TEXT,
+    "subHeadingThree" TEXT,
+    "imageUrlThree" TEXT,
+
+    CONSTRAINT "website_header_content_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "privacy_policy" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "policyName" TEXT NOT NULL,
+
+    CONSTRAINT "privacy_policy_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -284,6 +330,9 @@ CREATE TABLE "showcase_work" (
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "team_member_userId_serviceTeamId_key" ON "team_member"("userId", "serviceTeamId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "specialization_title_key" ON "specialization"("title");
 
 -- CreateIndex
@@ -296,7 +345,10 @@ CREATE UNIQUE INDEX "service_category_categoryName_key" ON "service_category"("c
 CREATE UNIQUE INDEX "service_serviceName_key" ON "service"("serviceName");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "slot_startTime_weekDay_serviceTeamId_key" ON "slot"("startTime", "weekDay", "serviceTeamId");
+CREATE UNIQUE INDEX "slot_startTime_serviceTeamId_availableServiceId_key" ON "slot"("startTime", "serviceTeamId", "availableServiceId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "booking_userId_date_serviceId_key" ON "booking"("userId", "date", "serviceId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "payment_bookingId_key" ON "payment"("bookingId");
@@ -332,6 +384,9 @@ ALTER TABLE "slot" ADD CONSTRAINT "slot_availableServiceId_fkey" FOREIGN KEY ("a
 ALTER TABLE "booking" ADD CONSTRAINT "booking_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "booking" ADD CONSTRAINT "booking_slotId_fkey" FOREIGN KEY ("slotId") REFERENCES "slot"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "booking" ADD CONSTRAINT "booking_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "available_sevice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -344,6 +399,9 @@ ALTER TABLE "review_and_rating" ADD CONSTRAINT "review_and_rating_userId_fkey" F
 ALTER TABLE "review_and_rating" ADD CONSTRAINT "review_and_rating_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "available_sevice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "feedback" ADD CONSTRAINT "feedback_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "blog_post" ADD CONSTRAINT "blog_post_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "service_category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -351,6 +409,9 @@ ALTER TABLE "stats" ADD CONSTRAINT "stats_bestSellingServiceId_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "notification" ADD CONSTRAINT "notification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "team_notification" ADD CONSTRAINT "team_notification_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "service_team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "showcase_work" ADD CONSTRAINT "showcase_work_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "available_sevice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

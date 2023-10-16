@@ -1,6 +1,7 @@
 import express from 'express';
 import { availableServiceRoutes } from '../modules/availableService/availableService.routes';
 import { blogPostRoutes } from '../modules/blogPost/blogPost.routes';
+import { bookingRoutes } from '../modules/booking/booking.routes';
 import { faqRoutes } from '../modules/faq/faq.routes';
 import { featuredInRoutes } from '../modules/featuedIn/featuedIn.routes';
 import { notificationRoutes } from '../modules/notification/notification.routes';
@@ -56,6 +57,10 @@ const moduleRoutes = [
   {
     path: '/upcoming-service',
     route: upcomingServiceRoutes,
+  },
+  {
+    path: '/booking',
+    route: bookingRoutes,
   },
   {
     path: '/review-and-rating',

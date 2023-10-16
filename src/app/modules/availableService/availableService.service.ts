@@ -1,4 +1,4 @@
-import { AvailableService, Prisma } from '@prisma/client';
+import { AvailableService, BookingStatus, Prisma } from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import { calculatePagination } from '../../../helpers/paginationHelper';
@@ -18,10 +18,26 @@ import {
 const insertIntoDB = async (
   data: AvailableService
 ): Promise<AvailableService> => {
+  const { serviceId } = data;
+
+  const service = await prisma.service.findUnique({
+    where: {
+      id: serviceId,
+    },
+  });
+
+  data.categoryId = service?.serviceCategoryId as string;
+  data.price = service?.price as number;
+  data.serviceName = service?.serviceName as string;
+
   const result = await prisma.availableService.create({
     data,
     include: {
-      service: true,
+      service: {
+        include: {
+          serviceCategory: true,
+        },
+      },
       slots: {},
     },
   });
@@ -50,7 +66,11 @@ const getAllFromDB = async (
 
   const result = await prisma.availableService.findMany({
     include: {
-      service: true,
+      service: {
+        include: {
+          serviceCategory: true,
+        },
+      },
       slots: {},
     },
     where: whereConditons,
@@ -94,7 +114,11 @@ const getAllRemainingServices = async (
 
   const result = await prisma.availableService.findMany({
     include: {
-      service: true,
+      service: {
+        include: {
+          serviceCategory: true,
+        },
+      },
       slots: {},
     },
     where: whereConditons,
@@ -105,22 +129,26 @@ const getAllRemainingServices = async (
 
   const total = await prisma.availableService.count();
 
-  const bookings = await prisma.booking.findMany({
-    where: {
-      date: date,
-    },
-  });
+  if (date) {
+    const bookings = await prisma.booking.findMany({
+      where: {
+        date: date,
+        status: BookingStatus.pending || BookingStatus.confirmed,
+      },
+    });
 
-  result.forEach(service => {
-    const serviceBooking = bookings.filter(
-      book => book.serviceId === service.id
-    );
-    const bookedSlots = serviceBooking.map(b => b.slot);
-    const available = service.slots.filter(
-      slot => !bookedSlots.includes(slot.id)
-    );
-    service.slots = available;
-  });
+    result.forEach(service => {
+      const serviceBooking = bookings.filter(
+        book => book.serviceId === service.id
+      );
+
+      const bookedSlots = serviceBooking.map(b => b.slotId);
+      const available = service.slots.filter(
+        slot => !bookedSlots.includes(slot.id)
+      );
+      service.slots = available;
+    });
+  }
 
   return {
     meta: {
@@ -138,7 +166,11 @@ const getDataById = async (id: string): Promise<AvailableService | null> => {
       id,
     },
     include: {
-      service: true,
+      service: {
+        include: {
+          serviceCategory: true,
+        },
+      },
       slots: {},
     },
   });
@@ -155,7 +187,11 @@ const updateDataById = async (
     },
     data: payload,
     include: {
-      service: true,
+      service: {
+        include: {
+          serviceCategory: true,
+        },
+      },
       slots: {},
     },
   });
@@ -182,7 +218,12 @@ const getDataByCategory = async (
 ): Promise<AvailableService[]> => {
   const AvailableServices = await prisma.availableService.findMany({
     include: {
-      service: true,
+      service: {
+        include: {
+          serviceCategory: true,
+        },
+      },
+      slots: {},
     },
     where: {
       categoryId: categoryId,

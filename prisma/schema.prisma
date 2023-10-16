@@ -27,6 +27,7 @@ model Users {
   bookings         Booking[]
   reviewAndRatings ReviewAndRating[]
   notifications    Notification[]
+  feedbacks        Feedback[]
 
   @@map("users")
 }
@@ -163,6 +164,7 @@ model Slot {
 
   availableServiceId String
   availableService   AvailableService @relation(fields: [availableServiceId], references: [id])
+  bookings           Booking[]
 
   @@unique([startTime, serviceTeamId, availableServiceId])
   @@map("slot")
@@ -181,7 +183,8 @@ model Booking {
   userId String
   user   Users  @relation(fields: [userId], references: [id])
 
-  slot String?
+  slotId String
+  slot   Slot   @relation(fields: [slotId], references: [id])
 
   serviceId String
   service   AvailableService @relation(fields: [serviceId], references: [id])
@@ -222,6 +225,18 @@ model ReviewAndRating {
   review String
 
   @@map("review_and_rating")
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  comment String
+  userId  String
+  user    Users  @relation(fields: [userId], references: [id])
+
+  @@map("feedback")
 }
 
 model BlogPost {
@@ -401,6 +416,7 @@ enum BookingStatus {
 enum PaymentStatus {
   paid
   notPaid
+  rejected
 }
 
 enum PaymentMethod {

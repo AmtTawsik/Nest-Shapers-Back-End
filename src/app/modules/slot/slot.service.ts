@@ -2,6 +2,8 @@ import { Prisma, Slot } from '@prisma/client';
 
 import { calculatePagination } from '../../../helpers/paginationHelper';
 
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
 import { IGenericPaginationResponse } from '../../../interfaces/genericPaginationResponse';
 import { IpaginationOptions } from '../../../interfaces/paginationOptions';
 import { findFilterConditions } from '../../../shared/findFilterConditions';
@@ -15,6 +17,20 @@ import {
 } from './slot.constant';
 
 const insertIntoDB = async (data: Slot): Promise<Slot> => {
+  const isExist = await prisma.slot.findFirst({
+    where: {
+      startTime: data.startTime,
+      serviceTeamId: data.serviceTeamId,
+    },
+  });
+
+  if (isExist) {
+    throw new ApiError(
+      'This team is alreday assign to another task',
+      httpStatus.NOT_FOUND
+    );
+  }
+
   const result = await prisma.slot.create({
     data,
     include: {
