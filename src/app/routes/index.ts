@@ -7,6 +7,7 @@ import { reviewAndRatingRoutes } from '../modules/reviewAndRating/reviewAndRatin
 import { serviceRoutes } from '../modules/service/service.routes';
 import { serviceTeamRoutes } from '../modules/serviceTeam/serviceTeam.routes';
 import { showcaseWorkRoutes } from '../modules/showcaseWork/showcaseWork.routes';
+import { slotsRoutes } from '../modules/slot/slot.routes';
 import { specializationRoutes } from '../modules/specialization/specialization.routes';
 import { statsRoutes } from '../modules/stats/stats.routes';
 import { upcomingServiceRoutes } from '../modules/upcomingService/upcomingService.routes';
@@ -80,6 +81,10 @@ const moduleRoutes = [
   {
     path: '/showcase',
     route: showcaseWorkRoutes,
+  },
+  {
+    path: '/slots',
+    route: slotsRoutes,
   },
 ];
 
