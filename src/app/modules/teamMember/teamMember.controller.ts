@@ -100,12 +100,12 @@ const deleteDataById: RequestHandler = catchAsync(async (req, res, next) => {
     statusCode: httpStatus.OK,
     success: true,
     status: 'success',
-    message: 'Service deleted successfully',
+    message: 'Team Member deleted successfully',
     data: result,
   });
 });
 
-export const ServiceController = {
+export const TeamMemberController = {
   insertIntoDB,
   getAllFromDB,
   getDataById,

@@ -1,4 +1,5 @@
 import express from 'express';
+import { availableServiceRoutes } from '../modules/availableService/availableService.routes';
 import { blogPostRoutes } from '../modules/blogPost/blogPost.routes';
 import { faqRoutes } from '../modules/faq/faq.routes';
 import { featuredInRoutes } from '../modules/featuedIn/featuedIn.routes';
@@ -47,6 +48,10 @@ const moduleRoutes = [
   {
     path: '/service',
     route: serviceRoutes,
+  },
+  {
+    path: '/available-service',
+    route: availableServiceRoutes,
   },
   {
     path: '/upcoming-service',

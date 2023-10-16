@@ -38,6 +38,17 @@ const getAllFromDB = async (
     skip,
     take: limit,
     orderBy: orderCondition,
+    include: {
+      teamMembers: {
+        include: {
+          user: true,
+          serviceTeam: true,
+          specialization: true,
+        },
+      },
+      serviceSchedule: {},
+      teamNotifications: {},
+    },
   });
 
   const total = await prisma.serviceTeam.count();

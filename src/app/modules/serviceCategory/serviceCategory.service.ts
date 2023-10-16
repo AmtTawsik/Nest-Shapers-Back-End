@@ -40,6 +40,9 @@ const getAllFromDB = async (
     skip,
     take: limit,
     orderBy: orderCondition,
+    include: {
+      services: {},
+    },
   });
 
   const total = await prisma.serviceCategory.count();
@@ -59,6 +62,9 @@ const getDataById = async (id: string): Promise<ServiceCategory | null> => {
     where: {
       id,
     },
+    include: {
+      services: {},
+    },
   });
   return result;
 };
@@ -72,6 +78,9 @@ const updateDataById = async (
       id,
     },
     data: payload,
+    include: {
+      services: {},
+    },
   });
 
   return result;

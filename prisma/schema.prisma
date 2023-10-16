@@ -50,7 +50,7 @@ model TeamMember {
   serviceTeamId String
   serviceTeam   ServiceTeam @relation(fields: [serviceTeamId], references: [id])
 
-  @@unique([serviceTeamId])
+  @@unique([userId, serviceTeamId])
   @@map("team_member")
 }
 
@@ -71,9 +71,11 @@ model ServiceTeam {
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
 
-  teamName        String       @unique
-  teamMembers     TeamMember[]
-  serviceSchedule Slot[]
+  teamName String @unique
+
+  teamMembers       TeamMember[]
+  serviceSchedule   Slot[]
+  teamNotifications TeamNotification[]
 
   @@map("service_team")
 }
@@ -120,16 +122,18 @@ model AvailableService {
 
   totalServiceProvided Int @default(100)
 
-  categoryId String?
-  price      Float?
+  categoryId  String?
+  price       Float?
+  serviceName String?
 
-  serviceId        String
-  service          Service           @relation(fields: [serviceId], references: [id])
-  slots            Slot[]
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
   bookings         Booking[]
   reviewAndRatings ReviewAndRating[]
   stat             Stats?
   showcaseWorks    ShowcaseWork[]
+  slots            Slot[]
 
   @@map("available_sevice")
 }
@@ -153,7 +157,6 @@ model Slot {
   updatedAt DateTime @updatedAt @map("updatedAt")
 
   startTime String
-  weekDay   WeekDays
 
   serviceTeamId String
   serviceTeam   ServiceTeam @relation(fields: [serviceTeamId], references: [id])
@@ -161,7 +164,7 @@ model Slot {
   availableServiceId String
   availableService   AvailableService @relation(fields: [availableServiceId], references: [id])
 
-  @@unique([startTime, weekDay, serviceTeamId])
+  @@unique([startTime, serviceTeamId, availableServiceId])
   @@map("slot")
 }
 
@@ -177,6 +180,8 @@ model Booking {
 
   userId String
   user   Users  @relation(fields: [userId], references: [id])
+
+  slot String?
 
   serviceId String
   service   AvailableService @relation(fields: [serviceId], references: [id])
@@ -287,13 +292,26 @@ model Notification {
   @@map("notification")
 }
 
+model TeamNotification {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  teamId String
+  team   ServiceTeam @relation(fields: [teamId], references: [id])
+
+  readStatus Boolean            @default(false)
+  message    String
+  type       NotificationStatus
+
+  @@map("team_notification")
+}
+
 model WebsiteContent {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
 
-  heading          String?
-  subHeading       String?
   aboutUsText      String?
   aboutUsImage     String?
   ceoStatement     String?
@@ -302,8 +320,39 @@ model WebsiteContent {
   companyAddress   String?
   companyContactNo String?
   companyEmail     String?
+  footerText       String?
 
   @@map("website_content")
+}
+
+model WesiteBannerContent {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  headingOne    String?
+  subHeadingOne String?
+  imageUrlOne   String?
+
+  headingTwo    String?
+  subHeadingTwo String?
+  imageUrlTwo   String?
+
+  headingThree    String?
+  subHeadingThree String?
+  imageUrlThree   String?
+
+  @@map("website_header_content")
+}
+
+model PrivacyPolicy {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  policyName String
+
+  @@map("privacy_policy")
 }
 
 model ShowcaseWork {

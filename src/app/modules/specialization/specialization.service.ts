@@ -38,6 +38,9 @@ const getAllFromDB = async (
     skip,
     take: limit,
     orderBy: orderCondition,
+    include: {
+      teamMembers: {},
+    },
   });
 
   const total = await prisma.specialization.count();
