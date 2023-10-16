@@ -12,6 +12,7 @@ import { upcomingServiceRoutes } from '../modules/upcomingService/upcomingServic
 import { authRoutes } from '../modules/users/auth.routes';
 import { profileRoutes } from '../modules/users/profile.routes';
 import { userRoutes } from '../modules/users/users.routes';
+import { websiteContentRoutes } from '../modules/websiteContent/websiteContent.routes';
 const router = express.Router();
 
 const moduleRoutes = [
@@ -70,6 +71,10 @@ const moduleRoutes = [
   {
     path: '/notification',
     route: notificationRoutes,
+  },
+  {
+    path: '/website-content',
+    route: websiteContentRoutes,
   },
 ];
 
