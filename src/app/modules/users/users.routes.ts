@@ -18,7 +18,7 @@ router.get(
 );
 router.patch(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN),
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   UserController.updateDataById
 );
 router.delete(

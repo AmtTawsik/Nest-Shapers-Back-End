@@ -13,6 +13,7 @@ router.get(
 );
 
 router.get('/:id', AvailableServiceController.getDataById);
+router.get('/:id/:date', AvailableServiceController.getAvailAbleService);
 router.get(
   '/:categoryId/category',
   AvailableServiceController.getServiceByCategory

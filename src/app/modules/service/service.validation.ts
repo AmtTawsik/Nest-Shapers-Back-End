@@ -24,7 +24,7 @@ const update = z.object({
   body: z.object({
     serviceName: z.string(),
     description: z.string(),
-    price: z.string(),
+    price: z.number(),
     imageUrl: z.string(),
     serviceCategoryId: z.string(),
   }),

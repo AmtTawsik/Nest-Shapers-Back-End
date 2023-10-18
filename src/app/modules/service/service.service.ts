@@ -21,6 +21,8 @@ const insertIntoDB = async (data: Service): Promise<Service> => {
     data,
     include: {
       serviceCategory: true,
+      availableServices: {},
+      upcomingServices: {},
     },
   });
   return result;
@@ -49,6 +51,8 @@ const getAllFromDB = async (
   const result = await prisma.service.findMany({
     include: {
       serviceCategory: true,
+      availableServices: {},
+      upcomingServices: {},
     },
     where: whereConditons,
     skip,
@@ -75,6 +79,8 @@ const getDataById = async (id: string): Promise<Service | null> => {
     },
     include: {
       serviceCategory: true,
+      availableServices: {},
+      upcomingServices: {},
     },
   });
   return result;
@@ -91,6 +97,8 @@ const updateDataById = async (
     data: payload,
     include: {
       serviceCategory: true,
+      availableServices: {},
+      upcomingServices: {},
     },
   });
 
@@ -114,6 +122,8 @@ const getDataByCategory = async (categoryId: string): Promise<Service[]> => {
   const Services = await prisma.service.findMany({
     include: {
       serviceCategory: true,
+      availableServices: {},
+      upcomingServices: {},
     },
     where: {
       serviceCategory: {

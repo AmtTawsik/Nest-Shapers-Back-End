@@ -1,6 +1,8 @@
 import { Prisma, UpcomingService } from '@prisma/client';
 import { calculatePagination } from '../../../helpers/paginationHelper';
 
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
 import { IGenericPaginationResponse } from '../../../interfaces/genericPaginationResponse';
 import { IpaginationOptions } from '../../../interfaces/paginationOptions';
 import { findFilterConditions } from '../../../shared/findFilterConditions';
@@ -16,6 +18,19 @@ import {
 const insertIntoDB = async (
   data: UpcomingService
 ): Promise<UpcomingService> => {
+  const isExist = await prisma.upcomingService.findFirst({
+    where: {
+      serviceId: data.serviceId,
+    },
+  });
+
+  if (isExist) {
+    throw new ApiError(
+      'This service already exist in upcoming service list',
+      httpStatus.CONFLICT
+    );
+  }
+
   const result = await prisma.upcomingService.create({
     data,
     include: {

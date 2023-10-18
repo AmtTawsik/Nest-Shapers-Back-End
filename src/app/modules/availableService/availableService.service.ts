@@ -1,4 +1,4 @@
-import { AvailableService, BookingStatus, Prisma } from '@prisma/client';
+import { AvailableService, BookingStatus, Prisma, Slot } from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 import { calculatePagination } from '../../../helpers/paginationHelper';
@@ -25,6 +25,19 @@ const insertIntoDB = async (
       id: serviceId,
     },
   });
+
+  const isExist = await prisma.availableService.findFirst({
+    where: {
+      serviceId: serviceId,
+    },
+  });
+
+  if (isExist) {
+    throw new ApiError(
+      'This service already exist in available service list',
+      httpStatus.CONFLICT
+    );
+  }
 
   data.categoryId = service?.serviceCategoryId as string;
   data.price = service?.price as number;
@@ -179,6 +192,50 @@ const getDataById = async (id: string): Promise<AvailableService | null> => {
   return result;
 };
 
+const getAvailAbleService = async (id: string, date: string) => {
+  const result = await prisma.availableService.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      service: {
+        include: {
+          serviceCategory: true,
+        },
+      },
+      slots: {},
+    },
+  });
+
+  const newService = result;
+
+  if (date) {
+    const bookings = await prisma.booking.findMany({
+      where: {
+        date: date,
+        status: {
+          in: [BookingStatus.pending, BookingStatus.confirmed],
+        },
+      },
+    });
+
+    const serviceBooking = bookings.filter(
+      book => book.serviceId === newService?.id
+    );
+
+    const bookedSlots = serviceBooking.map(b => b.slotId);
+    const available = newService?.slots.filter(
+      slot => !bookedSlots.includes(slot.id)
+    );
+
+    if (newService) {
+      newService.slots = available as Slot[]; // Adjust Slot to your actual type
+    }
+
+    return newService;
+  }
+};
+
 const updateDataById = async (
   id: string,
   payload: Partial<AvailableService>
@@ -251,4 +308,5 @@ export const AvailableServiceServices = {
   deleteDataById,
   getDataByCategory,
   getAllRemainingServices,
+  getAvailAbleService,
 };

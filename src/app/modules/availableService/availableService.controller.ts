@@ -99,6 +99,32 @@ const getDataById: RequestHandler = catchAsync(async (req, res, next) => {
   });
 });
 
+const getAvailAbleService: RequestHandler = catchAsync(
+  async (req, res, next) => {
+    const result = await AvailableServiceServices.getAvailAbleService(
+      req.params.id,
+      req.params.date
+    );
+
+    if (!result) {
+      return next(
+        new ApiError(
+          `No Available Service found with this id`,
+          httpStatus.NOT_FOUND
+        )
+      );
+    }
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      status: 'success',
+      message: 'Available Service retrived successfully',
+      data: result,
+    });
+  }
+);
+
 const updateDataById: RequestHandler = catchAsync(async (req, res, next) => {
   const payload = req.body;
 
@@ -168,4 +194,5 @@ export const AvailableServiceController = {
   deleteDataById,
   getServiceByCategory,
   getRemainingServicesFromDB,
+  getAvailAbleService,
 };
