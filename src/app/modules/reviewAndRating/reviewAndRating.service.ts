@@ -8,6 +8,9 @@ import { findFilterConditions } from '../../../shared/findFilterConditions';
 import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
 
+import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
+import ApiError from '../../../errors/ApiError';
 import {
   IReviewFilters,
   ReviewRelationalFields,
@@ -16,16 +19,31 @@ import {
 } from './reviewAndRating.constant';
 
 const insertIntoDB = async (
+  verifiedUser: JwtPayload,
   data: ReviewAndRating
 ): Promise<ReviewAndRating> => {
-  const result = await prisma.reviewAndRating.create({
-    data,
-    include: {
-      user: true,
-      service: true,
+  const booking = await prisma.booking.findFirst({
+    where: {
+      userId: verifiedUser.userId,
+      serviceId: data.serviceId,
     },
   });
-  return result;
+
+  if (booking && booking.status === 'confirmed') {
+    const result = await prisma.reviewAndRating.create({
+      data,
+      include: {
+        user: true,
+        service: true,
+      },
+    });
+    return result;
+  } else {
+    throw new ApiError(
+      `You must have a confirmed booking for this service to add a review`,
+      httpStatus.NOT_FOUND
+    );
+  }
 };
 
 const getAllFromDB = async (

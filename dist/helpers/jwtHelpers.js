@@ -11,6 +11,12 @@ const createToken = (payload, secret, expireTime) => {
     });
 };
 const verifyToken = (token, secret) => {
+    // try {
+    //   const isVerified = jwt.verify(token, secret);
+    //   return isVerified as JwtPayload;
+    // } catch (error) {
+    //   throw new ApiError('You are not authorized', httpStatus.UNAUTHORIZED);
+    // }
     return jsonwebtoken_1.default.verify(token, secret);
 };
 exports.jwtHelpers = {

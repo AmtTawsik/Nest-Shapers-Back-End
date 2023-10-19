@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { AvailableService, BookingStatus, Prisma, Slot } from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
@@ -84,7 +85,11 @@ const getAllFromDB = async (
           serviceCategory: true,
         },
       },
-      slots: {},
+      slots: {
+        include: {
+          serviceTeam: true,
+        },
+      },
     },
     where: whereConditons,
     skip,
@@ -132,7 +137,11 @@ const getAllRemainingServices = async (
           serviceCategory: true,
         },
       },
-      slots: {},
+      slots: {
+        include: {
+          serviceTeam: true,
+        },
+      },
     },
     where: whereConditons,
     skip,
@@ -186,7 +195,11 @@ const getDataById = async (id: string): Promise<AvailableService | null> => {
           serviceCategory: true,
         },
       },
-      slots: {},
+      slots: {
+        include: {
+          serviceTeam: true,
+        },
+      },
     },
   });
   return result;
@@ -203,7 +216,11 @@ const getAvailAbleService = async (id: string, date: string) => {
           serviceCategory: true,
         },
       },
-      slots: {},
+      slots: {
+        include: {
+          serviceTeam: true,
+        },
+      },
     },
   });
 
@@ -229,7 +246,8 @@ const getAvailAbleService = async (id: string, date: string) => {
     );
 
     if (newService) {
-      newService.slots = available as Slot[]; // Adjust Slot to your actual type
+      //@ts-ignore
+      newService.slots = available as Slot[];
     }
 
     return newService;
@@ -251,7 +269,11 @@ const updateDataById = async (
           serviceCategory: true,
         },
       },
-      slots: {},
+      slots: {
+        include: {
+          serviceTeam: true,
+        },
+      },
     },
   });
 
@@ -265,7 +287,11 @@ const deleteDataById = async (id: string): Promise<AvailableService> => {
     },
     include: {
       service: true,
-      slots: {},
+      slots: {
+        include: {
+          serviceTeam: true,
+        },
+      },
     },
   });
 
@@ -282,7 +308,11 @@ const getDataByCategory = async (
           serviceCategory: true,
         },
       },
-      slots: {},
+      slots: {
+        include: {
+          serviceTeam: true,
+        },
+      },
     },
     where: {
       categoryId: categoryId,

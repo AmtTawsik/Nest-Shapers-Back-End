@@ -1,8 +1,10 @@
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 
+import config from '../../../config';
 import { paginationFields } from '../../../constants/paginationFields';
 import ApiError from '../../../errors/ApiError';
+import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
@@ -11,7 +13,13 @@ import { ReviewAndRatingServices } from './reviewAndRating.service';
 
 export const insertIntoDB: RequestHandler = catchAsync(async (req, res) => {
   const data = req.body;
-  const result = await ReviewAndRatingServices.insertIntoDB(data);
+  const token = req.headers.authorization;
+
+  const verifiedUser = jwtHelpers.verifyToken(
+    token as string,
+    config.jwt.secret as string
+  );
+  const result = await ReviewAndRatingServices.insertIntoDB(verifiedUser, data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

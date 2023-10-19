@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.availableServiceRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const user_1 = require("../../../enums/user");
+const auth_1 = __importDefault(require("../../middlewares/auth"));
+const validateRequest_1 = require("../../middlewares/validateRequest");
+const availableService_controller_1 = require("./availableService.controller");
+const availableService_validation_1 = require("./availableService.validation");
+const router = express_1.default.Router();
+router.get('/remaining-service', availableService_controller_1.AvailableServiceController.getRemainingServicesFromDB);
+router.get('/:id', availableService_controller_1.AvailableServiceController.getDataById);
+router.get('/:id/:date', availableService_controller_1.AvailableServiceController.getAvailAbleService);
+router.get('/:categoryId/category', availableService_controller_1.AvailableServiceController.getServiceByCategory);
+router.delete('/:id', (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SUPER_ADMIN), availableService_controller_1.AvailableServiceController.deleteDataById);
+router.patch('/:id', (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SUPER_ADMIN), (0, validateRequest_1.validateRequest)(availableService_validation_1.validationSchema.update), availableService_controller_1.AvailableServiceController.updateDataById);
+router.post('/', (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SUPER_ADMIN), (0, validateRequest_1.validateRequest)(availableService_validation_1.validationSchema.create), availableService_controller_1.AvailableServiceController.insertIntoDB);
+router.get('/', availableService_controller_1.AvailableServiceController.getAllFromDB);
+exports.availableServiceRoutes = router;

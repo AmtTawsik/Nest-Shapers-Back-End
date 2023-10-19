@@ -19,7 +19,7 @@ app.use('/api/v1', routes);
 
 // Main route
 app.get('/', async (req: Request, res: Response) => {
-  res.send('Working Successfully!!!');
+  res.send('Working Successfully');
 });
 
 // Error Route
