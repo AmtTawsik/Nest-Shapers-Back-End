@@ -7,8 +7,12 @@ import routes from './app/routes';
 import ApiError from './errors/ApiError';
 const app: Application = express();
 
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-
+app.use(
+  cors({
+    origin: 'https://nest-shapers-front-end.vercel.app',
+    credentials: true,
+  })
+);
 //parser
 app.use(express.json());
 app.use(cookieParser());
@@ -19,7 +23,7 @@ app.use('/api/v1', routes);
 
 // Main route
 app.get('/', async (req: Request, res: Response) => {
-  res.send('Working Successfully');
+  res.send('The Server is Working Successfully');
 });
 
 // Error Route
